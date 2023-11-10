@@ -1,4 +1,6 @@
 ﻿using AquiPaga_API_RESTful.Models;
+using AquiPaga_API_RESTful.Repositories;
+using AquiPaga_API_RESTful.Repositories.Interfaces;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
@@ -9,21 +11,25 @@ namespace AquiPaga_API_RESTful.Controllers
     [ApiController]
     public class TaskController : ControllerBase
     {
-        private readonly string _connectionString;
-        public TaskController(IConfiguration configuration)
+        //private readonly string _connectionString;
+        private readonly ITaskRepository _taskRepository;
+        public TaskController(IConfiguration configuration, ITaskRepository taskRepository)
         {
-            _connectionString = configuration.GetConnectionString("DataBase");
+            _taskRepository = taskRepository;
+            //_connectionString = configuration.GetConnectionString("DataBase");
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<ActionResult<List<TaskModel>>> GetAllAsync()
         {
-            using (var sqlConnection = new SqlConnection(_connectionString))
-            {
-                const string sql = "SELECT * FROM Tasks";
-                var students = await sqlConnection.QueryAsync<TaskModel>(sql);;
-                return Ok(students);
-            }
+            List<TaskModel> tasks = await _taskRepository.ListAsync();
+            return Ok(tasks);
+            //using (var sqlConnection = new SqlConnection(_connectionString))
+            //{
+            //const string sql = "SELECT * FROM Tasks";
+            //var students = await sqlConnection.QueryAsync<TaskModel>(sql);
+            //return Ok(students);
+            //}
         }
 
         [HttpPost]
