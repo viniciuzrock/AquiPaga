@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\AquiPaga_API_RESTful.props" />
+</Project>

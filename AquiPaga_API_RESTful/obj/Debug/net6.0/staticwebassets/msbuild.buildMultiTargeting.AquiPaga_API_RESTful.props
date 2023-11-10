@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\AquiPaga_API_RESTful.props" />
+</Project>

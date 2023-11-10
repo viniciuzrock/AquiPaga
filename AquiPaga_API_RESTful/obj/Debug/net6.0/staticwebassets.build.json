@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "itZ81emlp1gB553GzpTSUKGNwwfvB2PNO9epFPhSBJA=",
+  "Source": "AquiPaga_API_RESTful",
+  "BasePath": "_content/AquiPaga_API_RESTful",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
