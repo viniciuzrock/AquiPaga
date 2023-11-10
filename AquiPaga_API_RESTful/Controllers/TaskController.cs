@@ -1,5 +1,7 @@
 ﻿using AquiPaga_API_RESTful.Models;
+using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlClient;
 
 namespace AquiPaga_API_RESTful.Controllers
 {
@@ -7,10 +9,21 @@ namespace AquiPaga_API_RESTful.Controllers
     [ApiController]
     public class TaskController : ControllerBase
     {
-        [HttpGet]
-        public List<TaskModel> GetAllAsync()
+        private readonly string _connectionString;
+        public TaskController(IConfiguration configuration)
         {
-            return new List<TaskModel>();
+            _connectionString = configuration.GetConnectionString("DataBase");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                const string sql = "SELECT * FROM Tasks";
+                var students = await sqlConnection.QueryAsync<TaskModel>(sql);;
+                return Ok(students);
+            }
         }
 
         [HttpPost]
