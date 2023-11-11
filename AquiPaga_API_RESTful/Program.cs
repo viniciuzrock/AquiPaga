@@ -1,3 +1,8 @@
+using AquiPaga_API_RESTful.Repositories;
+using AquiPaga_API_RESTful.Repositories.Interfaces;
+using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace AquiPaga_API_RESTful
 {
     public class Program
@@ -12,6 +17,8 @@ namespace AquiPaga_API_RESTful
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddAutoMapper(typeof(StartupBase));
+            builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 
             var app = builder.Build();
 
