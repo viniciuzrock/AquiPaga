@@ -1,8 +1,11 @@
 ﻿using AquiPaga_API_RESTful.Models;
 using AquiPaga_API_RESTful.Repositories;
 using AquiPaga_API_RESTful.Repositories.Interfaces;
+using AquiPaga_API_RESTful.Resource;
+using AutoMapper;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -13,9 +16,11 @@ namespace AquiPaga_API_RESTful.Controllers
     public class TaskController : ControllerBase
     {
         private readonly ITaskRepository _taskRepository;
-        public TaskController(ITaskRepository taskRepository)
+        private readonly IMapper _mapper;
+        public TaskController(ITaskRepository taskRepository, IMapper mapper)
         {
             _taskRepository = taskRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -55,10 +60,11 @@ namespace AquiPaga_API_RESTful.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TaskModel>> PostAsync([FromBody] TaskModel task)
+        public async Task<ActionResult<TaskModel>> PostAsync([FromBody] SaveTaskResource resource)
         {
             try
             {
+                var task = _mapper.Map<SaveTaskResource,TaskModel>(resource);
                 await _taskRepository.AddAsync(task);             
                 return Ok(task);
             }
@@ -69,7 +75,7 @@ namespace AquiPaga_API_RESTful.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutAsync(int id, [FromBody] TaskModel updatedTask)
+        public async Task<ActionResult> PutAsync(int id, [FromBody] SaveTaskResource resource)
         {
             try
             {
@@ -80,9 +86,9 @@ namespace AquiPaga_API_RESTful.Controllers
                     return NotFound();
                 }
 
-                existingTask[0].Name = updatedTask.Name;
-                existingTask[0].Description = updatedTask.Description;
-                existingTask[0].Status = updatedTask.Status;
+                existingTask[0].Name = resource.Name;
+                existingTask[0].Description = resource.Description;
+                existingTask[0].Status = resource.Status;
 
                 bool success = await _taskRepository.UpdateAsync(existingTask[0]);
 
