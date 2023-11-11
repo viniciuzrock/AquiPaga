@@ -88,7 +88,7 @@ namespace AquiPaga_API_RESTful.Repositories
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> RemoveAsync(int id)
         {
             try
             {

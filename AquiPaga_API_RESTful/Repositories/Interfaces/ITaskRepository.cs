@@ -9,6 +9,6 @@ namespace AquiPaga_API_RESTful.Repositories.Interfaces
         Task<List<TaskModel>> ListIdAsync(int id);
         Task<TaskModel> AddAsync(TaskModel Task);
         Task<bool> UpdateAsync(TaskModel Task);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> RemoveAsync(int id);
     }
 }

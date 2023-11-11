@@ -107,5 +107,34 @@ namespace AquiPaga_API_RESTful.Controllers
             }
 
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            try
+            {
+                List<TaskModel> existingTask = await _taskRepository.ListIdAsync(id);
+
+                if (existingTask.Count == 0)
+                {
+                    return NotFound();
+                }
+
+                bool success = await _taskRepository.RemoveAsync(id);
+
+                if (success)
+                {
+                    return Ok(existingTask);
+                }
+                else
+                {
+                    return StatusCode(500, "Falha ao realizar a atualização.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao processar a solicitação: {ex.Message}");
+            }
+        }
     }
 }
