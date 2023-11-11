@@ -4,6 +4,7 @@ using AquiPaga_API_RESTful.Repositories.Interfaces;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace AquiPaga_API_RESTful.Controllers
 {
@@ -11,12 +12,10 @@ namespace AquiPaga_API_RESTful.Controllers
     [ApiController]
     public class TaskController : ControllerBase
     {
-        //private readonly string _connectionString;
         private readonly ITaskRepository _taskRepository;
-        public TaskController(IConfiguration configuration, ITaskRepository taskRepository)
+        public TaskController(ITaskRepository taskRepository)
         {
             _taskRepository = taskRepository;
-            //_connectionString = configuration.GetConnectionString("DataBase");
         }
 
         [HttpGet]
@@ -24,20 +23,16 @@ namespace AquiPaga_API_RESTful.Controllers
         {
             List<TaskModel> tasks = await _taskRepository.ListAsync();
             return Ok(tasks);
-            //using (var sqlConnection = new SqlConnection(_connectionString))
-            //{
-            //const string sql = "SELECT * FROM Tasks";
-            //var students = await sqlConnection.QueryAsync<TaskModel>(sql);
-            //return Ok(students);
-            //}
         }
 
         [HttpPost]
-        public void PostAsync(TaskModel task)
+        public async Task<ActionResult<TaskModel>> PostAsync([FromBody]TaskModel task)
         {
+            await _taskRepository.AddAsync(task);
             Console.WriteLine(task);
             Console.WriteLine(task.Name);
             Console.WriteLine("Tarefa recebida.");
+            return Ok(task);
         }
     }
 }
