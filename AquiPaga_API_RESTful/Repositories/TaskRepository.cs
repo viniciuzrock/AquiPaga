@@ -1,7 +1,9 @@
 ﻿using AquiPaga_API_RESTful.Models;
 using AquiPaga_API_RESTful.Repositories.Interfaces;
+using AquiPaga_API_RESTful.Resource;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
 
@@ -29,13 +31,13 @@ namespace AquiPaga_API_RESTful.Repositories
             }
         }
 
-        public async Task<List<TaskModel>> ListIdAsync(int id)
+        public async Task<TaskModel> ListIdAsync(int id)
         {
             try
             {
                 const string sql = "SELECT * FROM Tasks WHERE ID = @Id";
-                var tasks = await _sqlConnection.QueryAsync<TaskModel>(sql, new {Id = id});
-                return tasks.ToList();
+                var task = await _sqlConnection.QueryFirstOrDefaultAsync<TaskModel>(sql, new {Id = id});
+                return task;
             }
             catch(Exception ex)
             {
@@ -67,31 +69,50 @@ namespace AquiPaga_API_RESTful.Repositories
             }
         }
 
-        public async Task<bool> UpdateAsync(TaskModel Task)
+        public async Task<bool> UpdateAsync(SaveTaskResource Task, int id)
         {
             try
             {
-                var parameters = new TaskModel{
-                    Id = Task.Id,
-                    Name = Task.Name,
-                    Description = Task.Description,
-                    Status = Task.Status
+                TaskModel existingTask = await ListIdAsync(id);
+
+                if (existingTask == null)
+                {
+                    return false;
+                }
+
+                existingTask.Name = Task.Name;
+                existingTask.Description = Task.Description;
+                existingTask.Status = Task.Status;
+
+                const string sql = "UpdateTask";
+                var parameters = new
+                {
+                    TaskId = existingTask.Id,
+                    NewName = existingTask.Name,
+                    NewDescription = existingTask.Description,
+                    NewStatus = existingTask.Status
                 };
 
-                const string sql = "UPDATE Tasks SET Name = @Name, Description = @Description, Status = @Status WHERE Id = @Id";
-                int rowsAffected = await _sqlConnection.ExecuteAsync(sql, parameters);
+                int rowsAffected = await _sqlConnection.ExecuteAsync(sql, parameters, commandType: CommandType.StoredProcedure);
                 return rowsAffected > 0;
             }
-            catch
+            catch(Exception ex)
             {
                 throw;
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> RemoveAsync(int id)
         {
             try
             {
+                TaskModel existingTask = await ListIdAsync(id);
+
+                if (existingTask == null)
+                {
+                    return false;
+                }
+
                 const string sql = "DELETE FROM Tasks WHERE ID = @Id";
                 int rowsAffected = await _sqlConnection.ExecuteAsync(sql, new { Id = id });
                 return rowsAffected > 0;

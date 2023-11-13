@@ -1,4 +1,5 @@
 ﻿using AquiPaga_API_RESTful.Models;
+using AquiPaga_API_RESTful.Resource;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AquiPaga_API_RESTful.Repositories.Interfaces
@@ -6,9 +7,9 @@ namespace AquiPaga_API_RESTful.Repositories.Interfaces
     public interface ITaskRepository
     {
         Task<List<TaskModel>> ListAsync();
-        Task<List<TaskModel>> ListIdAsync(int id);
+        Task<TaskModel> ListIdAsync(int id);
         Task<TaskModel> AddAsync(TaskModel Task);
-        Task<bool> UpdateAsync(TaskModel Task);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> UpdateAsync(SaveTaskResource Task, int id);
+        Task<bool> RemoveAsync(int id);
     }
 }

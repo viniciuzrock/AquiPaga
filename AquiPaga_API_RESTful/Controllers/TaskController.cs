@@ -46,8 +46,8 @@ namespace AquiPaga_API_RESTful.Controllers
         {
             try
             {
-                List<TaskModel> task = await _taskRepository.ListIdAsync(id);
-                if (task.Count == 0)
+                TaskModel task = await _taskRepository.ListIdAsync(id);
+                if (task == null)
                 {
                     return NoContent();
                 }
@@ -75,26 +75,15 @@ namespace AquiPaga_API_RESTful.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> PutAsync(int id, [FromBody] SaveTaskResource resource)
+        public async Task<ActionResult> PutAsync([FromBody] SaveTaskResource resource, int id)
         {
             try
             {
-                List<TaskModel> existingTask = await _taskRepository.ListIdAsync(id);
-
-                if (existingTask.Count == 0)
-                {
-                    return NotFound();
-                }
-
-                existingTask[0].Name = resource.Name;
-                existingTask[0].Description = resource.Description;
-                existingTask[0].Status = resource.Status;
-
-                bool success = await _taskRepository.UpdateAsync(existingTask[0]);
+                bool success = await _taskRepository.UpdateAsync(resource, id);
 
                 if (success)
                 {
-                    return Ok(existingTask);
+                    return Ok("Tarefa atualizada.");
                 }
                 else
                 {
@@ -106,6 +95,28 @@ namespace AquiPaga_API_RESTful.Controllers
                 return StatusCode(500, $"Erro ao processar a solicitação: {ex.Message}");
             }
 
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteAsync(int id)
+        {
+            try
+            {
+                bool success = await _taskRepository.RemoveAsync(id);
+
+                if (success)
+                {
+                    return Ok("Tarefa excluída.");
+                }
+                else
+                {
+                    return NotFound("Tarefa não foi encontrada ou já foi excluída.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao processar a solicitação: {ex.Message}");
+            }
         }
     }
 }
