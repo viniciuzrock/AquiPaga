@@ -55,7 +55,7 @@ Este projeto consiste em uma API RESTful desenvolvida em C# utilizando o framewo
 1. Crie um banco de dados chamado `AquiPaga`.
 ```sql
 CREATE DATABASE AquiPaga
-use AquiPaga
+USE AquiPaga
 ```
 2. Crie a tabela `Tasks`
 ```
@@ -65,4 +65,24 @@ CREATE TABLE Tasks(
 	[DESCRIPTION] VARCHAR(255) NOT NULL,
 	[STATUS] INT NOT NULL
 )
+```
+3. Insira uma tarefa de exemplo:
+```
+INSERT Tasks VALUES ('Task1','Desc1','1')
+```
+4. Crie a stored procedure UpdateTask:
+```
+CREATE PROCEDURE UpdateTask
+	@TaskId INT,
+	@NewName VARCHAR(255),
+	@NewDescription VARCHAR(255),
+	@NewStatus INT
+AS
+BEGIN
+	UPDATE Tasks
+	SET [STATUS] = @NewStatus,
+	[NAME] = @NewName,
+	[Description] = @NewDescription
+	WHERE ID = @TaskId
+END
 ```
