@@ -20,7 +20,7 @@ Este projeto consiste em uma API RESTful desenvolvida em C# utilizando o framewo
    - Endpoint: `GET /api/task`
    - Retorna a lista de todas as tarefas.
      
-5 **Consulta de uma Tarefa específica**
+5. **Consulta de uma Tarefa específica**
    - Endpoint: `GET /api/task/{id}`
    - Retorna os detalhes de uma tarefa específica com base no ID fornecido.
 
