@@ -47,7 +47,7 @@ namespace AquiPaga_API_RESTful.Controllers
             try
             {
                 TaskModel task = await _taskRepository.ListIdAsync(id);
-                if (task != null)
+                if (task == null)
                 {
                     return NoContent();
                 }
@@ -110,7 +110,7 @@ namespace AquiPaga_API_RESTful.Controllers
                 }
                 else
                 {
-                    return StatusCode(500, "Falha ao realizar a atualização.");
+                    return NotFound("Tarefa não foi encontrada ou já foi excluída.");
                 }
             }
             catch (Exception ex)

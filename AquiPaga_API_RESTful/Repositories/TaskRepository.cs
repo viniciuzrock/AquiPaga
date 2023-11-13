@@ -75,7 +75,7 @@ namespace AquiPaga_API_RESTful.Repositories
             {
                 TaskModel existingTask = await ListIdAsync(id);
 
-                if (existingTask != null)
+                if (existingTask == null)
                 {
                     return false;
                 }
@@ -84,7 +84,6 @@ namespace AquiPaga_API_RESTful.Repositories
                 existingTask.Description = Task.Description;
                 existingTask.Status = Task.Status;
 
-                //const string sql = "UPDATE Tasks SET Name = @Name, Description = @Description, Status = @Status WHERE Id = @Id";
                 const string sql = "UpdateTask";
                 var parameters = new
                 {
@@ -93,11 +92,11 @@ namespace AquiPaga_API_RESTful.Repositories
                     NewDescription = existingTask.Description,
                     NewStatus = existingTask.Status
                 };
-                //int rowsAffected = await _sqlConnection.ExecuteAsync(sql, new { existingTask });
+
                 int rowsAffected = await _sqlConnection.ExecuteAsync(sql, parameters, commandType: CommandType.StoredProcedure);
                 return rowsAffected > 0;
             }
-            catch
+            catch(Exception ex)
             {
                 throw;
             }
@@ -109,7 +108,7 @@ namespace AquiPaga_API_RESTful.Repositories
             {
                 TaskModel existingTask = await ListIdAsync(id);
 
-                if (existingTask != null)
+                if (existingTask == null)
                 {
                     return false;
                 }

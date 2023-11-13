@@ -17,6 +17,7 @@ namespace AquiPaga_API_RESTful.Models
         [StringLength(255)]
         public string Description { get; set; }
         [Required]
+        [Column(TypeName = "INT")]
         public TaskStatus Status { get; set; }
     }
 }
