@@ -87,4 +87,4 @@ BEGIN
 END
 ```
 ## Desenvolvido por
-[inicius Rocha](https://www.linkedin.com/in/vinicius-rocha-santos/)
+[Vinicius Rocha](https://www.linkedin.com/in/vinicius-rocha-santos/)
